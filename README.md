@@ -1,5 +1,7 @@
 # Face Mask Detection Project
 
+Developed by: Farnaz Zinnah, Afia Nawar Jenice, Shashwata Kayum, Ahmed Nafis, Humaira Syed, and Juhi Rahman.
+
 ## About the Project
 The Face Mask Detection Project employs advanced AI techniques to identify individuals wearing masks, aiming to assist in COVID-19 safety compliance. It integrates applications across web, Android, and iOS platforms using TensorFlow, Keras, Flutter, and Kotlin.
 
@@ -15,7 +17,8 @@ The Face Mask Detection Project employs advanced AI techniques to identify indiv
   - Effective cloud-based data management
 
 ## Project Overview
-
+![face mask App Screenshot 1](https://github.com/fzinnah17/FaceMaskDetection/blob/main/faceWebone.png)
+![ace mask App Screenshot 2](https://github.com/fzinnah17/FaceMaskDetection/blob/main/faceWebTwo.png)
 
 ### Android Application
 - **Built With**: Kotlin, TensorFlow Lite
@@ -29,6 +32,8 @@ The Face Mask Detection Project employs advanced AI techniques to identify indiv
   - Push notifications for mask compliance
 
 ## Project Overview
+![face mask android App Screenshot 1](https://github.com/fzinnah17/FaceMaskDetection/blob/main/faceAndroidTwo.png)
+![ace mask android App Screenshot 2](https://github.com/fzinnah17/FaceMaskDetection/blob/main/faceAndroidone.png)
 
 ### iOS Application
 - **Framework**: Swift, Flutter
@@ -42,3 +47,5 @@ The Face Mask Detection Project employs advanced AI techniques to identify indiv
   - User-friendly interface
 
 ## Project Overview
+![face mask App Screenshot 1](https://github.com/fzinnah17/FaceMaskDetection/blob/main/faceiOSone.png)
+![ace mask App Screenshot 2](https://github.com/fzinnah17/FaceMaskDetection/blob/main/faceiOStwo.png)
