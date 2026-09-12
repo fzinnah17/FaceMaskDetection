@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:face_mask_detector/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tflite/tflite.dart';
-import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -32,7 +29,6 @@ class _HomeState extends State<Home> {
 
   List<OverlayBox>? recognitionsList = [];
   late Size screen;
-  List<Map> detectedList = [];
 
   int _cameraIndex = -1;
 
@@ -117,20 +113,6 @@ class _HomeState extends State<Home> {
             asynch: true,
           );
 
-          DetectJson detectJson = DetectJson();
-          detectJson.status = recognitions!.first["label"];
-          detectJson.total_number = faces.length;
-          detectJson.timestamp =
-              DateFormat("dd-MM-yyyy_HH-mm-ss").format(DateTime.now());
-
-          detectedList.add(detectJson.tojsonData());
-
-          if (detectedList.length >= 100) {
-            var body = json.encode({"array": detectedList});
-            postData(body).then(
-                (value) => {print("data after response \n\n\n " + value.body)});
-            detectedList = [];
-          }
 
           result = "";
           print("recognitions >> " + recognitions.toString());
@@ -159,17 +141,6 @@ class _HomeState extends State<Home> {
       }
       isWorking = false;
     }
-  }
-
-  Future<http.Response> postData(String body) {
-    print("post call >>>> " + body);
-    return http.post(
-      Uri.parse('https://gsheet-data.herokuapp.com/post_json'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: body,
-    );
   }
 
   @override
@@ -267,21 +238,6 @@ class _HomeState extends State<Home> {
   int sortComparator(a, b) {
     return double.parse(b["confidence"].toString())
         .compareTo(double.parse(a["confidence"].toString()));
-  }
-}
-
-class DetectJson {
-  String timestamp = "";
-  String status = "";
-  int total_number = 0;
-
-  Map<String, dynamic> tojsonData() {
-    var map = <String, dynamic>{};
-    map["timestamp"] = timestamp;
-    map["status"] = status;
-    map["total_number"] = total_number;
-
-    return map;
   }
 }
 

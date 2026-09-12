@@ -9,17 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interceptors.HttpLoggingInterceptor
-import com.androidnetworking.interfaces.StringRequestListener
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.face.FaceDetector
 import com.otaliastudios.cameraview.CameraView
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONObject
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.gpu.GpuDelegate
@@ -32,10 +24,7 @@ import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.nio.MappedByteBuffer
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -134,7 +123,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    var jsonArray = JSONArray()
     private fun processBitmap(bitmap: Bitmap, faceDetector: FaceDetector): MutableList<Box> {
         val boundingBoxList = mutableListOf<Box>()
 
@@ -193,26 +181,15 @@ class MainActivity : AppCompatActivity() {
                 LABEL.No_Mask -> "Without Mask : " + String.format("%.1f", label2 * 100) + "%"
                 LABEL.Covered_Mouth_Chin -> "Covered Mouth Chin : " + String.format(
                     "%.1f",
-                    label2 * 100
+                    label3 * 100
                 ) + "%"
                 LABEL.Covered_Nose_Mouth -> "Covered Nose Mouth : " + String.format(
                     "%.1f",
-                    label2 * 100
+                    label4 * 100
                 ) + "%"
             }
 
 
-            val json = JSONObject().apply {
-                put("timestamp", System.currentTimeMillis().dateWithFormat("dd-MM-yyyy_HH-mm-ss"))
-                put("status", labelType.name.replace("_", " "))
-                put("total_number", faces.size())
-            }
-            jsonArray.put(json)
-            Log.e("TAG", "processBitmap: size >> ${jsonArray.length()}")
-            if (jsonArray.length() >= 10) {
-                dumpDataLog(jsonArray)
-                jsonArray = JSONArray()
-            }
 
 //            if (with > without){
 //                predictionn = "With Mask : " + String.format("%.1f", with*100) + "%"
@@ -223,60 +200,6 @@ class MainActivity : AppCompatActivity() {
         }
         return boundingBoxList
     }
-
-    private fun dumpDataLog(jsonArray: JSONArray) {
-        val json = JSONObject().apply {
-            put("array", JSONArray(jsonArray.toString()))
-        }
-
-        Log.e("TAG", "dumpDataLog: data >> $json")
-
-        val client = OkHttpClient().newBuilder()
-            .build()
-        val mediaType = MediaType.parse("application/json")
-        val body = RequestBody.create(
-            mediaType,
-            json.toString()
-        )
-
-        val request: Request = Request.Builder()
-            .url("https://gsheet-data.herokuapp.com/post_json")
-            .method("POST", body)
-            .addHeader("Content-Type", "application/json")
-            .build()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                Log.e("call", "onResponse: ${response.body()?.string()}")
-            }
-        })
-
-        /*AndroidNetworking.post("https://gsheet-data.herokuapp.com/post_json")
-            .addApplicationJsonBody(json)
-            .setTag("test")
-            .addHeaders("Content-Type", "application/json")
-            .setPriority(Priority.HIGH)
-            .setOkHttpClient(
-                OkHttpClient.Builder()
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .build()
-            )
-            .build()
-            .getAsString(object : StringRequestListener {
-                override fun onResponse(response: String?) {
-                    Log.e("TAG", "response >> $response")
-                }
-
-                override fun onError(anError: ANError?) {
-                    Log.e("TAG", "onError: ${anError?.errorCode}")
-                    anError?.printStackTrace()
-                }
-            })*/
-    }
-
 
     private fun predict(input: Bitmap): MutableMap<String, Float> {
 
@@ -313,8 +236,3 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private fun Long.dateWithFormat(formatString: String): String {
-    val date = Date()
-    date.time = this
-    return SimpleDateFormat(formatString, Locale.US).format(date)
-}
