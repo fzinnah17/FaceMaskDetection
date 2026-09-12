@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Secrets / credentials
+*.p12
+*.pfx
+*.pem
+*.key
+*.jks
+*.keystore
+data-log-*.json
+service-account*.json
+credentials*.json
+
+# Archives / generated bundles
+*.zip
+
+# iCloud placeholders
+*.icloud
+
+# ML model binaries
+*.tflite
+*.caffemodel
+
+# Environment
+.env
+.env.*
+!.env.example
